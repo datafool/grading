@@ -1,6 +1,6 @@
-__author__ = 'pawan'
-
+from __future__ import absolute_import, division, print_function
 import pandas as pd
+from grade import Grading
 
 class DataMunging:
 
@@ -21,11 +21,22 @@ class DataMunging:
     def aggregateData(self):
         merged_data = self.sales_data.merge(self.item_data)
         merged_data = merged_data[merged_data.CATEGORY == self.category]
-        weekly_sales = merged_data.groupby(['STOREID', 'WEEKID']).sum().reset_index(level=None)
-        total_sales = weekly_sales.groupby('STOREID').sum().reset_index(level=None)
-        week_count = weekly_sales.groupby('STOREID').size().reset_index(level=None)
-        week_count.columns=['STOREID', 'Freq']
-        average_sales = total_sales.merge(week_count)
-        average_sales['Average Sales'] = average_sales.SALES/average_sales.Freq
-        average_sales = average_sales.drop('WEEKID',1)
-        return average_sales
+        total_sales = merged_data.groupby('STOREID').sum().reset_index(level=None)
+        total_sales = total_sales.drop('WEEKID', 1)
+        return total_sales
+
+# if __name__ == "__main__":
+#     sales_file = "C:/Users/1020382/Documents/Work/StoreClustering/grading/testData/sales.txt"
+#     item_file = "C:/Users/1020382/Documents/Work/StoreClustering/grading/testData/item.txt"
+#     dm = DataMunging(sales_file, item_file, "B")
+#     dm.readData()
+#     dm.cleanData()
+#     data = dm.aggregateData()
+#     gd = Grading()
+#     bin_size = []
+#     num_grade = int(raw_input("Enter Number of Grade"))
+#     for i in range(num_grade - 1):
+#         print("Upper Limit of bin ", i)
+#         bin_size.append(int(raw_input()))
+#     gd.percentage_of_average(data, 4, "C:/Users/1020382/Documents/Work/StoreClustering/grading/testData")
+# #     gd.equalWidth(data, 4, "C:/Users/1020382/Documents/Work/StoreClustering/grading/testResult")
